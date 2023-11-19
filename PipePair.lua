@@ -1,6 +1,6 @@
 PipePair = Class{}
 
-local GAP_HEIGHT = 90
+GAP_HEIGHT = 90 + math.random( -25, 25 )
 
 function PipePair:init( y )
     self.x = VIRTUAL_WIDTH

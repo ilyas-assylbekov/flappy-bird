@@ -7,7 +7,7 @@ PIPE_WIDTH = 70
 BIRD_WIDTH = 38
 BIRD_HEIGHT = 24
 
-function PlayState:init()
+function PlayState:init( )
     self.bird = Bird()
     self.pipePairs = {}
     self.timer = 0
@@ -17,12 +17,35 @@ function PlayState:init()
     self.lastY = -1 * PIPE_HEIGHT + math.random( 80 ) + 20
 end
 
+function PlayState:enter( params )
+    if params then
+        self.bird = params.bird
+        self.pipePairs = params.pipePairs
+        self.timer = params.timer
+        self.score = params.score
+        self.lastY = params.lastY 
+    end
+end
+
 function PlayState:update( dt )
+    if love.keyboard.wasPressed( "p" ) then
+        sounds[ "music" ]:pause()
+        sounds[ "pause" ]:play()
+        gStateMachine:change( "pause", {
+            bird = self.bird,
+            pipePairs = self.pipePairs,
+            timer = self.timer,
+            score = self.score,
+            lastY = self.lastY
+        } )
+    end
+
     self.timer = self.timer + dt
     
-    if self.timer > 2 then
+    local timerRandom = math.random( 2, 10 )
+    if self.timer > timerRandom then
         local y = math.max( -1 * PIPE_HEIGHT + 10,
-            math.min( self.lastY + math.random( -20, 20 ), VIRTUAL_HEIGHT - 90 - PIPE_HEIGHT ) )
+            math.min( self.lastY + math.random( -20, 20 ), VIRTUAL_HEIGHT - GAP_HEIGHT - PIPE_HEIGHT ) )
         self.lastY = y
         
         table.insert( self.pipePairs, PipePair( y ) )
